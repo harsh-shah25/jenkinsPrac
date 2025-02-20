@@ -1,9 +1,18 @@
 pipeline { 
-agent any
+    agent any
     stages {
-        stage('Clone Git') { /*you can also specify git location */
+        stage('Clone Git') {
             steps {
-                git 'https://github.com/harsh-shah25/jenkinsPrac.git'
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/main']],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/harsh-shah25/jenkinsPrac.git',
+                            credentialsId: '846ee163-c377-4a93-ac1a-6522f87328df'
+                        ]]
+                    ])
+                }
             }
         }
         stage('Build Code') {
@@ -12,12 +21,5 @@ agent any
                 sh "./temp.py"
             }
         }
-
-        // stage('Test Code') {
-        //     steps {
-        //         sh "chmod u+x Test.py"
-        //         sh "./Test.py"
-        //     }
-        // }
     }
 }
